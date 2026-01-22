@@ -27,40 +27,39 @@ int dessiner_echiquier(SDL_Renderer *renderer,int x, int y, int taille)
     }
     return 0;
 }
-int initialiser_echiquier(SDL_Renderer* renderer, echec* jeuechec)
+
+int init_piece_echec(t_piece_echec *piece_echec, SDL_Renderer* renderer) {
+    int somme_test_surface = 0;
+    piece_echec->imageRoiNoir = NULL;
+    piece_echec->imageRoiBlanc = NULL;
+    piece_echec->imageDameNoire = NULL;
+    piece_echec->imageDameBlanche = NULL;
+    piece_echec->imageTourBlanche = NULL;
+    piece_echec->imageTourNoire = NULL;
+    piece_echec->imageFouBlanc = NULL;
+    piece_echec->imageFouNoir = NULL;
+    piece_echec->imageCavalierBlanc = NULL;
+    piece_echec->imageCavalierNoir = NULL;
+    piece_echec->imagePionBlanc = NULL;
+    piece_echec->imagePionNoir = NULL;
+    somme_test_surface += initialiser_image(&piece_echec->imageRoiNoir, "image pieces d'echec/roi noir.bmp",renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imageRoiBlanc, "image pieces d'echec/roi blanc.bmp", renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imageDameNoire, "image pieces d'echec/dame noir.bmp", renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imageDameBlanche, "image pieces d'echec/dame Blanche.bmp", renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imageTourBlanche, "image pieces d'echec/tour blanche.bmp", renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imageTourNoire, "image pieces d'echec/tour noir.bmp", renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imageFouBlanc, "image pieces d'echec/fou blanc.bmp", renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imageFouNoir, "image pieces d'echec/fou noir.bmp", renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imageCavalierBlanc, "image pieces d'echec/cavalier blanc.bmp", renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imageCavalierNoir, "image pieces d'echec/cavalier noir.bmp", renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imagePionBlanc, "image pieces d'echec/pion blanc.bmp",renderer);
+    somme_test_surface += initialiser_image(&piece_echec->imagePionNoir, "image pieces d'echec/pion noir.bmp", renderer);
+    return somme_test_surface;
+
+};
+int initialiser_echiquier(SDL_Renderer* renderer, echec* jeuechec, t_piece_echec *piece_echec)
 {
     dessiner_echiquier(renderer,jeuechec->positonEchiquier.x, jeuechec->positonEchiquier.x, jeuechec->taille);
-    int somme_test_surface = 0;
-    SDL_Surface* imageRoiNoir = NULL;
-    SDL_Surface* imageRoiBlanc = NULL;
-    SDL_Surface* imageDameNoire = NULL;
-    SDL_Surface* imageDameBlanche = NULL;
-    SDL_Surface* imageTourBlanche = NULL;
-    SDL_Surface* imageTourNoire = NULL;
-    SDL_Surface* imageFouBlanc = NULL;
-    SDL_Surface* imageFouNoir = NULL;
-    SDL_Surface* imageCavalierBlanc = NULL;
-    SDL_Surface* imageCavalierNoir = NULL;
-    SDL_Surface* imagePionBlanc = NULL;
-    SDL_Surface* imagePionNoir =NULL;
-    somme_test_surface += initialiser_image(&imageRoiNoir, "image pieces d'echec/roi noir.bmp",renderer);
-    somme_test_surface += initialiser_image(&imageRoiBlanc, "image pieces d'echec/roi blanc.bmp", renderer);
-    somme_test_surface += initialiser_image(&imageDameNoire, "image pieces d'echec/dame noir.bmp", renderer);
-    somme_test_surface += initialiser_image(&imageDameBlanche, "image pieces d'echec/dame Blanche.bmp", renderer);
-    somme_test_surface += initialiser_image(&imageTourBlanche, "image pieces d'echec/tour blanche.bmp", renderer);
-    somme_test_surface += initialiser_image(&imageTourNoire, "image pieces d'echec/tour noir.bmp", renderer);
-    somme_test_surface += initialiser_image(&imageFouBlanc, "image pieces d'echec/fou blanc.bmp", renderer);
-    somme_test_surface += initialiser_image(&imageFouNoir, "image pieces d'echec/fou noir.bmp", renderer);
-    somme_test_surface += initialiser_image(&imageCavalierBlanc, "image pieces d'echec/cavalier blanc.bmp", renderer);
-    somme_test_surface += initialiser_image(&imageCavalierNoir, "image pieces d'echec/cavalier noir.bmp", renderer);
-    somme_test_surface += initialiser_image(&imagePionBlanc, "image pieces d'echec/pion blanc.bmp",renderer);
-    somme_test_surface += initialiser_image(&imagePionNoir, "image pieces d'echec/pion noir.bmp", renderer);
-    if (somme_test_surface != 0)
-    {
-        printf("une image c'est mal charg�");
-        return -1;
-
-    }
     int i;
     int j;
     int compteurBlanc = 0;
@@ -74,101 +73,125 @@ int initialiser_echiquier(SDL_Renderer* renderer, echec* jeuechec)
     {
         for (j = 0; j < 8; j++)
         {
-            
+
             Coordonnee position = { j,i };
             if (i == 6)
             {
-                
+
                 Piece pion;
-                if (jeuechec->joueur1.couleur == 1) initialiser_pieces(position, &jeuechec->joueur1, &pion, Pion, imagePionNoir,&compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur1, &pion, Pion, imagePionBlanc, &compteurBlanc);
+                if (jeuechec->joueur1.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Pion, piece_echec->imagePionNoir,&compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Pion, piece_echec->imagePionBlanc, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else if (i == 1)
             {
-                
+
                 Piece pion;
-                if (jeuechec->joueur2.couleur == 1) initialiser_pieces(position, &jeuechec->joueur2, &pion, Pion, imagePionNoir, &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur2, &pion, Pion, imagePionBlanc, &compteurBlanc);
+                if (jeuechec->joueur2.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Pion, piece_echec->imagePionNoir, &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Pion, piece_echec->imagePionBlanc, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else if (i == 7 && j== 4)
             {
 
                 Piece pion;
-                if (jeuechec->joueur1.couleur == 1) initialiser_pieces(position, &jeuechec->joueur1, &pion, Dame, imageDameNoire, &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur1, &pion, Roi, imageRoiBlanc, &compteurBlanc); 
+                if (jeuechec->joueur1.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Dame, piece_echec->imageDameNoire, &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Roi, piece_echec->imageRoiBlanc, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else if (i == 0 && j == 4)
             {
                 Piece pion;
-                if (jeuechec->joueur2.couleur == 1) initialiser_pieces(position, &jeuechec->joueur2, &pion, Roi, imageRoiNoir, &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur2, &pion, Dame, imageDameBlanche, &compteurBlanc);
+                if (jeuechec->joueur2.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Roi, piece_echec->imageRoiNoir, &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Dame, piece_echec->imageDameBlanche, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else if (i == 7 && j == 3)
             {
-              
+
                 Piece pion;
-                if (jeuechec->joueur1.couleur == 1) initialiser_pieces(position, &jeuechec->joueur1, &pion, Roi, imageRoiNoir, &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur1, &pion, Dame, imageDameBlanche, &compteurBlanc);
+                if(jeuechec->joueur1.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Roi, piece_echec->imageRoiNoir, &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Dame, piece_echec->imageDameBlanche, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else if (i == 0 && j == 3)
             {
-           
+
                 Piece pion;
-                if (jeuechec->joueur2.couleur == 1) initialiser_pieces(position, &jeuechec->joueur2, &pion, Dame, imageDameNoire, &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur2, &pion, Roi, imageRoiBlanc, &compteurBlanc);
+                if (jeuechec->joueur2.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Dame, piece_echec->imageDameNoire, &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Roi, piece_echec->imageRoiBlanc, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
 
             }
             else if (i == 7 && (j == 0 || j == 7))
             {
                 Piece pion;
-                if (jeuechec->joueur1.couleur == 1) initialiser_pieces(position, &jeuechec->joueur1, &pion, Tour, imageTourNoire, &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur1, &pion, Tour, imageTourBlanche, &compteurBlanc);
+                if (jeuechec->joueur1.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Tour, piece_echec->imageTourNoire, &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Tour, piece_echec->imageTourBlanche, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else if (i == 0 && (j == 0 || j==7))
             {
-            
+
                 Piece pion;
-                if (jeuechec->joueur2.couleur == 1) initialiser_pieces(position, &jeuechec->joueur2, &pion, Tour, imageTourNoire, &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur2, &pion, Tour, imageTourBlanche, &compteurBlanc);
+                if (jeuechec->joueur2.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Tour, piece_echec->imageTourNoire, &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Tour, piece_echec->imageTourBlanche, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else if (i == 7 && (j == 1 || j == 6))
             {
-          
+
                 Piece pion;
-                if (jeuechec->joueur1.couleur == 1) initialiser_pieces(position, &jeuechec->joueur1, &pion, Cavalier, imageCavalierNoir, &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur1, &pion, Cavalier, imageCavalierBlanc, &compteurBlanc);
+                if (jeuechec->joueur1.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Cavalier, piece_echec->imageCavalierNoir, &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Cavalier, piece_echec->imageCavalierBlanc, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else if (i == 0 && (j == 1 || j == 6))
             {
-              
+
                 Piece pion;
-                if (jeuechec->joueur2.couleur == 1) initialiser_pieces(position, &jeuechec->joueur2, &pion, Cavalier, imageCavalierNoir, &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur2, &pion, Cavalier, imageCavalierBlanc, &compteurBlanc);
+                if (jeuechec->joueur2.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Cavalier, piece_echec->imageCavalierNoir, &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Cavalier, piece_echec->imageCavalierBlanc, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else if (i == 7 && (j == 2 || j == 5))
             {
-              
+
                 Piece pion;
-                if (jeuechec->joueur1.couleur == 1) initialiser_pieces(position, &jeuechec->joueur1, &pion, Fou, imageFouNoir, &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur1, &pion, Fou, imageFouBlanc, &compteurBlanc);
+                if (jeuechec->joueur1.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Fou, piece_echec->imageFouNoir, &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur1, &pion, Fou, piece_echec->imageFouBlanc, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else if (i == 0 && (j == 2 || j == 5))
             {
-            
+
                 Piece pion;
-                if (jeuechec->joueur2.couleur == 1) initialiser_pieces(position, &jeuechec->joueur2, &pion, Fou, imageFouNoir , &compteurNoir);
-                else initialiser_pieces(position, &jeuechec->joueur2, &pion, Fou, imageFouBlanc, &compteurBlanc);
+                if (jeuechec->joueur2.couleur == 1)
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Fou, piece_echec->imageFouNoir , &compteurNoir);
+                else
+                    initialiser_pieces(position, &jeuechec->joueur2, &pion, Fou, piece_echec->imageFouBlanc, &compteurBlanc);
                 jeuechec->echiquier[i][j] = pion;
             }
             else {
@@ -176,23 +199,17 @@ int initialiser_echiquier(SDL_Renderer* renderer, echec* jeuechec)
                 pion.position.x = j;
                 pion.position.y = i;
                 pion.en_vie = 1;
+                pion.texture = NULL;
                 jeuechec->echiquier[i][j] = pion;
-
-                
             }
-            
             afficher_pieces(jeuechec->echiquier[i][j], renderer, *jeuechec);
-           
         }
-        
     }
-  
-    printf("%d\n", somme_test_surface);
     return 0;
 }
 int initialiser_image(SDL_Texture **texture, char nomImage[40], SDL_Renderer* renderer)
 {
-    SDL_Surface* image=  SDL_LoadBMP(nomImage);
+    SDL_Surface* image = SDL_LoadBMP(nomImage);
     if (image == NULL)
     {
         printf("erreur de chargement image");
@@ -221,10 +238,11 @@ int initialiser_pieces(Coordonnee coordonneePosition, Joueur *joueur, Piece* pie
     *compteur=*compteur+1;
     joueur->nbPiece = *compteur;
 }
-int afficher_pieces(Piece pieces, SDL_Renderer* renderer, echec jeuechec)
+
+void afficher_pieces(Piece pieces, SDL_Renderer* renderer, echec jeuechec)
 {
   
-    if (pieces.en_vie==0)
+    if (pieces.en_vie == 0)
     {
         int j = pieces.position.x;
         int i = pieces.position.y;
@@ -234,7 +252,6 @@ int afficher_pieces(Piece pieces, SDL_Renderer* renderer, echec jeuechec)
         rect.h = jeuechec.taille / 8;
         rect.w = jeuechec.taille / 8;
         SDL_RenderCopy(renderer, pieces.texture, NULL, &rect);
-        SDL_RenderPresent(renderer);
     }
 }
 Piece case_position_pieces(int nbPixelX, int nbPixelY,echec jeuEchec)
@@ -324,6 +341,31 @@ void trouveRectangleCoordonne(SDL_Rect* rectangle, Coordonnee coordonnee, echec 
     rectangle->x = jeuEchec.positonEchiquier.x + jeuEchec.taille / 8 * coordonnee.x;
     rectangle->y = jeuEchec.positonEchiquier.y + jeuEchec.taille / 8 * coordonnee.y;
 }
+
+void printEchiquier(SDL_Renderer * renderer, echec *jeuechec, Coordonnee* coordonnes) {
+    dessiner_echiquier(renderer, jeuechec->positonEchiquier.x, jeuechec->positonEchiquier.x, jeuechec->taille);
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            afficher_pieces(jeuechec->echiquier[i][j], renderer, *jeuechec);
+        }
+    }
+
+    int i = 0;
+    for (i = 0; i < 28; i++)
+    {
+        if (coordonnes[i].x != -1)
+        {
+            SDL_Rect rect;
+            trouveRectangleCoordonne(&rect, coordonnes[i], *jeuechec);
+
+            SDL_RenderCopy(renderer, jeuechec->rondNoir, NULL, &rect);
+
+        }
+    }
+
+    SDL_RenderPresent(renderer);
+}
+
 void afficher_coordonne(SDL_Renderer* renderer, SDL_Texture* texture , Coordonnee* coordonnes,echec jeuechec, int taille)
 {
 
@@ -350,40 +392,36 @@ int pieceEstCoordonnePossible(Piece pieceSouris, Coordonnee *coordoneePosible, i
     }
     return 1;
 }
-void repeindreListeCase(echec jeuEchec, Coordonnee* coordonneAPeindre, int taille,SDL_Renderer*  renderer)
-{
-    
+void repeindreListeCase(echec jeuEchec, Coordonnee* coordonneAPeindre, int taille,SDL_Renderer*  renderer) {
     SDL_Color color2 = { 0,86,27,255 };
     SDL_Color color1 = { 149,165,149,255 };
     int indice = 0;
     int x = jeuEchec.positonEchiquier.x;
     int y = jeuEchec.positonEchiquier.y;
     int tailleEchquier = jeuEchec.taille;
-   
+
     for (indice=0; indice<taille;indice++)
         if (coordonneAPeindre[indice].x != -1)
         {
             int i = coordonneAPeindre[indice].y;
             int j = coordonneAPeindre[indice].x;
-            
+
             if ((i + j) % 2 == 0)
             {
                 SDL_SetRenderDrawColor(renderer, color1.r, color1.g, color1.b, color1.a != 0);
-   
+
             }
             else
             {
                 SDL_SetRenderDrawColor(renderer, color2.r, color2.g, color2.b, color2.a != 0);
             }
-        
+
             SDL_Rect rectangle = { x + (tailleEchquier * j / 8),y + (tailleEchquier * i / 8),tailleEchquier / 8,tailleEchquier / 8 };
             SDL_RenderFillRect(renderer, &rectangle);
-      
+
             Piece  piece = jeuEchec.echiquier[i][j];
-            
-            afficher_pieces(piece, renderer, jeuEchec);
-            SDL_RenderPresent(renderer);
-        
+
+
         }
 }
 void deplacerPiece(SDL_Renderer* renderer, echec* jeuEchec, Piece piecesADeplacer, Coordonnee coordPiece, int deplacerPieceJoueur)
@@ -452,10 +490,6 @@ void deplacerPiece(SDL_Renderer* renderer, echec* jeuEchec, Piece piecesADeplace
         }
         else suprimerPiece(&jeuEchec->joueur2, jeuEchec->echiquier[coordPiece.y - ordAAjouter][coordPiece.x]);
         jeuEchec->echiquier[coordPiece.y - ordAAjouter][coordPiece.x] = PieceVide;
-        Coordonnee coordonnePieceVide[1];
-        coordonnePieceVide[0] = PieceVide.position;
-        if (renderer != NULL) ; repeindreListeCase(*jeuEchec, &coordonnePieceVide[0], 1, renderer);
-
     }
     pion.en_vie = 1;
     int coordPieceX = coordPiece.x;
@@ -490,12 +524,6 @@ void deplacerPiece(SDL_Renderer* renderer, echec* jeuEchec, Piece piecesADeplace
     piece.position.x = coordPieceX;
     piece.position.y = coordPieceY;
     jeuEchec->echiquier[coordPieceY][coordPieceX] = piece;
-    Coordonnee coordonne[1];
-    coordonne[0] = pion.position;
-    if (renderer != NULL) {
-        afficher_pieces(piece, renderer, *jeuEchec);
-        repeindreListeCase(*jeuEchec, &coordonne[0], 1, renderer);
-    }
     if (rappelerFonction == 1)
     {
 
@@ -551,7 +579,8 @@ void case_possible(Piece piece, echec jeuEchec, Coordonnee* coordonneePossible,i
     {
         case_possible_roi(piece, jeuEchec, &coordonneePossible[0]);
     }
-    if (verifierEchec==1) verifierLesEchecs(&coordonneePossible[0], jeuEchec, piece);
+    if (verifierEchec == 1)
+        verifierLesEchecs(&coordonneePossible[0], jeuEchec, piece);
 }
 void case_possible_fou(Piece fou, echec jeuEchec, Coordonnee* coordonneePossible)
 {
@@ -1058,7 +1087,7 @@ int minMax(echec jeuEchec, int couleurJouant, int CoupAnticipe,Piece* pieceADepl
                      
                         valeurPossible = minMax(jeuEchec,2, CoupAnticipe - 1, NULL, NULL, couleurDeBase);
 
-                        if (valeurOptimal == NULL ||( valeurOptimal < valeurPossible))
+                        if (valeurOptimal == 0 || ( valeurOptimal < valeurPossible))
                         {
 
                             valeurOptimal = valeurPossible;
@@ -1074,7 +1103,7 @@ int minMax(echec jeuEchec, int couleurJouant, int CoupAnticipe,Piece* pieceADepl
                         valeurPossible = minMax(jeuEchec, couleurDeBase, CoupAnticipe - 1, NULL, NULL,couleurDeBase);
                            
                  
-                        if (valeurOptimal == NULL ||( valeurOptimal > valeurPossible))
+                        if (valeurOptimal == 0 ||( valeurOptimal > valeurPossible))
                         {
 
 

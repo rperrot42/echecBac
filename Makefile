@@ -3,11 +3,9 @@ DIR_OBJS = .objs
 SRC = main.c \
         fonction.c
 
-CC = gcc
+CC = gcc -g3
 
 FLAGS =  -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -L/opt/homebrew/lib -lSDL2 -g3
-
- #-fsanitize=thread
 
 OBJS = $(addprefix $(DIR_OBJS)/, $(SRC:.c=.o))
 

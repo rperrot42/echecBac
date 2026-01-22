@@ -12,7 +12,7 @@ struct Arbre
 typedef enum nomPiece nomPiece;
 enum nomPiece
 {
-	Roi, Dame, Pion, Fou, Cavalier,Tour,Vide
+	Roi = 0, Dame = 1, Pion = 2, Fou = 3, Cavalier = 4,Tour = 5,Vide = 6
 };
 typedef struct Joueur Joueur;
 
@@ -63,6 +63,7 @@ struct echec
 	Joueur joueur2;
 	Coordonnee positonEchiquier;
 	int taille;
+	SDL_Texture *rondNoir;
 	PriseEnPassant pionPasse;
 };
 typedef struct  rectangle rectangle;
@@ -73,11 +74,29 @@ struct rectangle
 	int w;
 	int h;
 };
+
+
+typedef struct s_piece_echec {
+	SDL_Texture* imageRoiNoir;
+	SDL_Texture* imageRoiBlanc;
+	SDL_Texture* imageDameNoire;
+	SDL_Texture* imageDameBlanche;
+	SDL_Texture* imageTourBlanche;
+	SDL_Texture* imageTourNoire;
+	SDL_Texture* imageFouBlanc;
+	SDL_Texture* imageFouNoir;
+	SDL_Texture* imageCavalierBlanc;
+	SDL_Texture* imageCavalierNoir;
+	SDL_Texture* imagePionBlanc;
+	SDL_Texture* imagePionNoir;
+} t_piece_echec;
+
+int init_piece_echec(t_piece_echec *piece_echec, SDL_Renderer* renderer);
 int dessiner_echiquier(SDL_Renderer* renderer, int x, int y, int taille);
-int initialiser_echiquier(SDL_Renderer* renderer, echec* jeuechec);
+int initialiser_echiquier(SDL_Renderer* renderer, echec* jeuechec, t_piece_echec *piece_echec);
 int initialiser_image(SDL_Texture **texture, char nomImage[40], SDL_Renderer* renderer);
 int initialiser_pieces(Coordonnee poition, Joueur* joueur, Piece* piece, nomPiece nom_piece, SDL_Texture* texture,int* compteur);
-int afficher_pieces(Piece pieces, SDL_Renderer* renderer, echec jeuechec);
+void afficher_pieces(Piece pieces, SDL_Renderer* renderer, echec jeuechec);
 Piece case_position_pieces(int nbPixelX, int nbPixelY,echec jeuEchec);
 void case_possible_pion(Piece pion, echec jeuEchec, Coordonnee* coordonneePossible);
 void initialiserListeCoordonee(Coordonnee* coordonneePossible, int taille);
@@ -105,3 +124,4 @@ int echecMatPat(echec jeuEchec, Joueur joueur);
 int evaluerUnePosition(echec jeuEchec, int couleur);
 int evaluerPositionJoueur(Joueur joueur);
 int minMax(echec jeuEchec, int couleurJouant, int CoupAnticipe, Piece* pieceADeplacer, Coordonnee* coordonnePossible, int couleurDeBase);
+void printEchiquier(SDL_Renderer * renderer, echec *jeuechec, Coordonnee* coordonnes);
